@@ -1,6 +1,6 @@
 # Hackin
 
-Hackin est une application web développée dans le cadre du hackathon **CSE Rebuild Gaza** pour contribuer, à travers le numérique, à la reconstruction sociale et économique de Gaza.[page:1]  
+Hackin est un EVENT du **Club Scientifique de l’ESI (CSE)** qui vise to create une application web développée dans le cadre du hackathon **CSE Rebuild Gaza** pour contribuer, à travers le numérique, à la reconstruction sociale et économique de Gaza.[page:1]  
 Le projet est réalisé sous l’égide du **Club Scientifique de l’ESI (CSE)** et met l’accent sur une interface simple, accessible et adaptée aux connexions limitées.[page:1]
 
 ---

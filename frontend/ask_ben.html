@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Bénévole | Palestine Future</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if (!params.has('t')) {
+                window.location.replace('index.html');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --green: #009736; 
+            --white: #fff;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--white);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
+        }
+        .login-box {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 151, 54, 0.1);
+        }
+        h2 { margin-bottom: 30px; color: var(--green); text-transform: uppercase; letter-spacing: 2px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #ccc; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--green); }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--green);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        button:hover { background: #007a2b; box-shadow: 0 0 15px rgba(0, 151, 54, 0.4); }
+        .back-link { display: block; margin-top: 20px; color: #666; text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <i class="fas fa-hand-holding-heart" style="font-size: 3rem; color: var(--green); margin-bottom: 20px;"></i>
+        <h2>Espace Bénévole</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" required placeholder="votre@email.com">
+            </div>
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <input type="password" required placeholder="••••••••">
+            </div>
+            <div style="text-align: right; margin-bottom: 15px;">
+                <a href="#" onclick="window.location.href='forgot_password.html?t='+Math.random().toString(36).substring(7); return false;" style="color: var(--green); text-decoration: none; font-size: 0.9rem;">Mot de passe oublié ?</a>
+            </div>
+            <button type="submit">SE CONNECTER</button>
+        </form>
+        <a href="index.html" class="back-link">Retour à l'accueil</a>
+    </div>
+
+    <script>
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    localStorage.setItem('user_token', data.token);
+                    localStorage.setItem('user_info', JSON.stringify(data.user));
+                    
+                    btn.style.background = '#00ff6a';
+                    btn.innerHTML = '<i class="fas fa-check"></i> Succès';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'community.html';
+                    }, 800);
+                } else {
+                    throw new Error(data.msg || 'Erreur de connexion');
+                }
+            } catch (err) {
+                alert(err.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.background = '#ce1126';
+                setTimeout(() => { btn.style.background = 'var(--green)'; }, 2000);
+            }
+        }
+    </script>
+    <script src="cursor.js"></script>
+</body>
+</html>

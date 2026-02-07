@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Palestine Future : Ensemble pour Demain</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        :root {
+            --black: #050505;
+            --dark-grey: #1a1a1a;
+            --white: #ffffff;
+            --green: #009736;
+            --red: #ce1126;
+            --dark-red: #8a0000;
+            --gold: #FFD700;
+            --neon-green: #00ff6a;
+            --neon-red: #ff3333;
+            --text-grey: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10;
+            background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -9;
+            pointer-events: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            padding: 15px 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        
+        nav .logo {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-grey);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s, text-shadow 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--green);
+            transition: width 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px var(--green);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .hero-bg-flag {
+            position: absolute;
+            width: 60vw;
+            opacity: 0.15;
+            filter: blur(80px);
+            z-index: -5;
+            animation: pulseFlag 5s infinite alternate;
+        }
+
+        @keyframes pulseFlag {
+            0% { transform: scale(1); opacity: 0.1; }
+            100% { transform: scale(1.1); opacity: 0.2; }
+        }
+
+        .hero-logo-wrapper {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-logo {
+            max-width: 300px;
+            width: 80vw;
+            filter: drop-shadow(0 0 20px rgba(0, 151, 54, 0.4)) drop-shadow(0 0 50px rgba(206, 17, 38, 0.2));
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+
+        .typing-container {
+            font-size: 1.5rem;
+            height: 2rem;
+            margin-bottom: 30px;
+            color: var(--gold);
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            font-size: 2rem;
+            color: var(--white);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            opacity: 0.6;
+            text-decoration: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .suffering-section {
+            padding: 100px 10%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8), rgba(20,0,0,0.3));
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--red);
+            margin: 15px auto 0;
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        .suffering-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .suffering-text p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #ccc;
+            text-align: justify;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s ease;
+        }
+
+        .suffering-text p.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .suffering-visual {
+            position: relative;
+        }
+
+        .timeline-container {
+            position: relative;
+            border-left: 2px solid #333;
+            padding-left: 30px;
+            margin-left: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: var(--red);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        .stat-bar-container {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+        }
+        
+        .stat-bar-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-row {
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--white);
+        }
+
+        .progress {
+            height: 8px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0;
+            transition: width 2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .vision-section {
+            padding: 100px 50px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(0, 151, 54, 0.05), transparent 70%);
+        }
+
+        .vision-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .v-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px 30px;
+            width: 350px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.4s, border-color 0.4s;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.4s ease;
+        }
+        
+        .v-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .v-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--green);
+            box-shadow: 0 10px 30px rgba(0, 151, 54, 0.1);
+        }
+
+        .v-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(45deg, var(--green), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .v-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .v-card p {
+            color: #bbb;
+            font-size: 1rem;
+        }
+
+        .join-section {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .join-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .role-card {
+            width: 250px;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .role-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .role-card:hover .role-inner {
+            transform: rotateY(180deg);
+        }
+
+        .role-front, .role-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .role-front {
+            background: rgba(0,0,0,0.8);
+            border-top: 3px solid var(--green);
+        }
+
+        .role-front i {
+            font-size: 3rem;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .role-back {
+            background: linear-gradient(135deg, var(--green), #004d1a);
+            color: white;
+            transform: rotateY(180deg);
+            border: 1px solid var(--white);
+        }
+
+        .btn-main {
+            display: inline-block;
+            margin-top: 60px;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--white);
+            background: transparent;
+            border: 2px solid var(--red);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: var(--red);
+            z-index: -1;
+            transition: 0.4s;
+        }
+
+        .btn-main:hover::before {
+            left: 0;
+        }
+
+        .btn-main:hover {
+            box-shadow: 0 0 30px var(--red);
+            border-color: var(--red);
+        }
+
+        footer {
+            padding: 50px 20px;
+            background: #000;
+            border-top: 1px solid #222;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 14px; }
+            .section-title { font-size: 2rem; width: 100%; }
+
+            nav { 
+                padding: 15px; 
+                flex-direction: column; 
+                gap: 15px; 
+                background: rgba(0,0,0,0.95);
+            }
+            nav ul { 
+                display: flex; 
+                gap: 15px; 
+                justify-content: center; 
+                flex-wrap: wrap; 
+                width: 100%;
+                padding: 0;
+            }
+            nav ul li { font-size: 0.85rem; }
+            
+            .suffering-section, .vision-section, .join-section { padding: 60px 15px; }
+            .suffering-grid { grid-template-columns: 1fr; gap: 40px; }
+            
+            .timeline-container { margin-left: 0; border-left: none; padding-left: 0; }
+
+            .timeline-item { 
+                border-left: 2px solid #333; 
+                padding-left: 20px; 
+                margin-left: 5px; 
+            }
+            
+            .timeline-item::before { left: -6px; }
+
+            .hero-logo { width: 60vw; }
+            .v-card { width: 100%; margin-bottom: 20px; }
+            header { padding-top: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-canvas"></div>
+    <div class="grid-overlay"></div>
+    
+    <canvas id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1;"></canvas>
+
+    <nav id="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Palestine Future" style="height: 50px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));">
+        </div>
+        <ul>
+            <li><a href="#">Accueil</a></li>
+            <li><a href="#suffering">Histoire</a></li>
+            <li><a href="#vision">Vision</a></li>
+            <li><a href="#join" style="color:var(--red);">Agir</a></li>
+            <li><a href="#" onclick="window.location.href='ask_ben.html?t=' + Math.random().toString(36).substring(7); return false;" style="border:1px solid var(--green); padding: 5px 15px; border-radius: 5px; color: var(--green); transition:0.3s;" onmouseover="this.style.background='var(--green)'; this.style.color='black'" onmouseout="this.style.background='transparent'; this.style.color='var(--green)'">CONNEXION</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <img src="image.png" alt="Flag" class="hero-bg-flag">
+
+        <div class="hero-logo-wrapper">
+            <img src="logo.png" alt="Palestine Future" class="hero-logo">
+        </div>
+        
+        <div class="typing-container" id="typing-text"></div>
+
+        <p style="max-width: 600px; margin: 0 auto; color: #ddd; font-size: 1.1rem; margin-bottom: 40px;">
+            Une terre d'histoire, un peuple de courage. 
+            Transformez la compassion en action concrète pour bâtir l'État de demain.
+        </p>
+        
+        <a href="#suffering" class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </header>
+
+    <section id="suffering" class="suffering-section">
+        <h2 class="section-title">De la Douleur à la Résilience</h2>
+        
+        <div class="suffering-grid">
+            <div class="suffering-text">
+                <p class="anim-on-scroll">
+                    Depuis des décennies, le peuple palestinien traverse des épreuves qui défient l'imagination. 
+                    Déplacement, restrictions, conflits... chaque jour est un combat pour la dignité.
+                </p>
+                <p class="anim-on-scroll">
+                    Mais la souffrance n'a jamais éteint l'espoir. Derrière les chiffres effrayants se cachent des histoires humaines. Des familles qui reconstruisent, des médecins qui soignent sans relâche.
+                </p>
+                <div class="stat-bar-container anim-on-scroll">
+                    <h3 style="margin-bottom:20px; color:var(--white);">Impact & Urgences</h3>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label"><span>Infrastructures détruites</span> <span>60%</span></div>
+                        <div class="progress" data-width="60%"><div class="progress-fill" style="background:var(--red);"></div></div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label"><span>Besoin médical urgent</span> <span>85%</span></div>
+                        <div class="progress" data-width="85%"><div class="progress-fill" style="background:var(--neon-red);"></div></div>
+                    </div>
+
+                    <div class="stat-row">
+                        <div class="stat-label"><span>Volonté de reconstruire</span> <span>100%</span></div>
+                        <div class="progress" data-width="100%"><div class="progress-fill" style="background:var(--green);"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="suffering-visual">
+                <div class="timeline-container">
+                    <div class="timeline-item anim-on-scroll">
+                        <div class="timeline-year">L'Histoire</div>
+                        <div class="timeline-desc">Un héritage culturel riche millénaire, enraciné dans la terre et les oliviers.</div>
+                    </div>
+                    <div class="timeline-item anim-on-scroll">
+                        <div class="timeline-year">L'Épreuve</div>
+                        <div class="timeline-desc">Des pertes humaines, des écoles fermées et un accès limité aux soins essentiels.</div>
+                    </div>
+                    <div class="timeline-item anim-on-scroll">
+                        <div class="timeline-year">La Résistance</div>
+                        <div class="timeline-desc">Par l'art, le savoir et la solidarité, l'identité palestinienne reste debout.</div>
+                    </div>
+                    <div class="timeline-item anim-on-scroll">
+                        <div class="timeline-year">2026 : Le Renouveau</div>
+                        <div class="timeline-desc">Nous lançons aujourd'hui la plus grande initiative de reconstruction collaborative.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vision" class="vision-section">
+        <h2 class="section-title">Notre Vision Technologique</h2>
+        
+        <div class="vision-cards">
+            <div class="v-card hover-anim">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Tech Hub</h3>
+                <p>Créer la "Silicon Valley" du Moyen-Orient, où les jeunes codent l'avenir de leur nation souveraine.</p>
+            </div>
+            <div class="v-card hover-anim">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Santé Connectée</h3>
+                <p>Mettre en place la télémédecine et des hôpitaux modulaires pour garantir l'accès aux soins partout.</p>
+            </div>
+            <div class="v-card hover-anim">
+                <i class="fas fa-seedling"></i>
+                <h3>Agri-Tech</h3>
+                <p>Réinventer l'agriculture avec des technologies durables pour assurer l'indépendance alimentaire.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="join" class="join-section">
+        <h2 class="section-title">Engagez-vous</h2>
+        <p style="margin-bottom:50px; color:#aaa;">Cliquez sur une carte pour proposer votre aide.</p>
+
+        <div class="join-grid">
+            <div class="role-card" onclick="window.location.href='Ask.html?t=' + Math.random().toString(36).substring(7)">
+                <div class="role-inner">
+                    <div class="role-front">
+                        <i class="fas fa-user-md"></i>
+                        <h3>Santé</h3>
+                    </div>
+                    <div class="role-back">
+                        <h3>Missions Médicales</h3>
+                        <p>Médecins, infirmiers, psychologues. Votre expertise sauve des vies.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="role-card" onclick="window.location.href='Ask.html?t=' + Math.random().toString(36).substring(7)">
+                <div class="role-inner">
+                    <div class="role-front">
+                        <i class="fas fa-microchip"></i>
+                        <h3>Tech</h3>
+                    </div>
+                    <div class="role-back">
+                        <h3>Développement</h3>
+                        <p>Développeurs, ingénieurs réseau, data scientists pour bâtir l'infra numérique.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="role-card" onclick="window.location.href='Ask.html?t=' + Math.random().toString(36).substring(7)">
+                <div class="role-inner">
+                    <div class="role-front">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Éducation</h3>
+                    </div>
+                    <div class="role-back">
+                        <h3>Enseignement</h3>
+                        <p>Mentorat à distance, cours de langues, formation professionnelle.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="role-card" onclick="window.location.href='Ask.html?t=' + Math.random().toString(36).substring(7)">
+                <div class="role-inner">
+                    <div class="role-front">
+                        <i class="fas fa-paint-brush"></i>
+                        <h3>Art & Culture</h3>
+                    </div>
+                    <div class="role-back">
+                        <h3>Rayonnement</h3>
+                        <p>Artistes, écrivains, vidéastes pour porter la voix de la Palestine.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:60px;">
+            <a href="#" onclick="window.location.href='Ask.html?t=' + Math.random().toString(36).substring(7); return false;" class="btn-main" style="margin-top:0;">Rejoindre le Mouvement</a>
+            <a href="conseils.html" class="btn-main" style="margin-top:0; border-color:rgba(255,255,255,0.3); color:#ccc; box-shadow:none;">Comprendre l'Histoire</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Hackin by CSE</p>
+        <div style="margin-top: 10px;">
+            <a href="#" onclick="window.location.href='ask_admin.html?t=' + Math.random().toString(36).substring(7); return false;" style="color: #333; text-decoration: none; font-size: 0.8rem; border: 1px solid #333; padding: 5px 10px; border-radius: 5px; transition: 0.3s;" onmouseover="this.style.borderColor='var(--red)'; this.style.color='var(--red)'" onmouseout="this.style.borderColor='#333'; this.style.color='#333'">
+                <i class="fas fa-user-shield"></i> JE SUIS ADMIN
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        let typingTimeout;
+        const typingRoles = [
+            "Reconstruire l'Espoir",
+            "Innover pour la Liberté",
+            "Soigner les Blessures",
+            "Éduquer pour l'Avenir",
+            "Unir nos Forces"
+        ];
+
+        function startTypingEffect() {
+            clearTimeout(typingTimeout);
+            const textElement = document.getElementById('typing-text');
+            
+            let roleIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentRole = typingRoles[roleIndex];
+                
+                if (isDeleting) {
+                    textElement.innerText = currentRole.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    textElement.innerText = currentRole.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let typeSpeed = isDeleting ? 50 : 100;
+
+                if (!isDeleting && charIndex === currentRole.length) {
+                    typeSpeed = 2000; 
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    roleIndex = (roleIndex + 1) % typingRoles.length;
+                    typeSpeed = 500;
+                }
+
+                typingTimeout = setTimeout(type, typeSpeed);
+            }
+            type();
+        }
+
+        const animatedElements = document.querySelectorAll('.anim-on-scroll, .timeline-item, .v-card, .stat-bar-container');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    
+                    const progressBars = entry.target.querySelectorAll('.progress');
+                    progressBars.forEach(bar => {
+                        const fill = bar.querySelector('.progress-fill');
+                        const widthObj = bar.getAttribute('data-width');
+                        if (widthObj && fill) {
+                            fill.style.width = widthObj;
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.2 });
+
+        animatedElements.forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        const canvas = document.getElementById('particles-js');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 3;
+                this.color = Math.random() > 0.5 ? '#009736' : '#ce1126';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if(this.x < 0) this.x = width; 
+                else if(this.x > width) this.x = 0;
+                if(this.y < 0) this.y = height; 
+                else if(this.y > height) this.y = 0;
+            }
+            draw() {
+                ctx.globalAlpha = 0.6;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            resize();
+            particles = [];
+            for (let i = 0; i < 80; i++) particles.push(new Particle());
+            animateParticles();
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            particles.forEach((a, i) => {
+                particles.slice(i + 1).forEach(b => {
+                    const dx = a.x - b.x;
+                    const dy = a.y - b.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 120) {
+                        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', resize);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            startTypingEffect();
+            initParticles();
+        });
+    </script>
+    <script src="cursor.js"></script>
+</body>
+</html>

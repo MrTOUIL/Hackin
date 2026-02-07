@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communauté | Palestine Future</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --black: #050505;
+            --dark-grey: #1a1a1a;
+            --white: #ffffff;
+            --green: #009736;
+            --red: #ce1126;
+            --gold: #FFD700;
+            --neon-green: #00ff6a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
+            z-index: -2;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid #333;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--green); }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .user-status {
+            font-size: 0.75rem;
+            color: var(--neon-green);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+        }
+
+        .welcome-hero {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease;
+        }
+
+        .welcome-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-hero p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            border-left: 4px solid var(--red);
+            padding-left: 15px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .member-card {
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--green);
+            box-shadow: 0 10px 20px rgba(0, 151, 54, 0.1);
+        }
+
+        .member-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #333;
+            margin: 0 auto 15px;
+            border: 2px solid var(--gold);
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            color: var(--green);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .member-desc {
+            font-size: 0.9rem;
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .connect-btn {
+            background: transparent;
+            border: 1px solid var(--white);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .connect-btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            nav { 
+                padding: 10px 15px; 
+                flex-direction: column; 
+                gap: 15px;
+            }
+            
+            .container { margin-top: 140px; padding: 0 15px; }
+            
+            .welcome-hero h1 { font-size: 1.8rem; }
+            .grid { grid-template-columns: 1fr; }
+            
+            .user-profile { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-canvas"></div>
+
+    <nav>
+        <div class="logo">Pales<span>tine</span> Future</div>
+        <div class="user-profile">
+            <div class="user-avatar" id="navAvatar">U</div>
+            <div class="user-info">
+                <span class="user-name" id="navName">Utilisateur</span>
+                <span class="user-status"><i class="fas fa-circle" style="font-size:0.6rem;"></i> En ligne</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-hero">
+            <h1 id="welcomeTitle">Bienvenue dans la Résistance</h1>
+            <p>Votre profil est en cours de validation. En attendant, connectez-vous avec vos pairs.</p>
+        </div>
+
+        <h2 class="section-title">Votre Bataillon : <span id="domainLabel" style="color:var(--gold);">Tous domaines</span></h2>
+        
+        <div class="grid" id="membersGrid">
+            <div class="member-card">
+                <img src="https://ui-avatars.com/api/?name=Sarah+K&background=0D8ABC&color=fff" class="member-img" alt="User">
+                <div class="member-name">Dr. Sarah K.</div>
+                <div class="member-role">Médecin</div>
+                <p class="member-desc">Spécialiste en chirurgie d'urgence. Active à Gaza depuis 2024. Coordonne les livraisons médicales.</p>
+                <button class="connect-btn">Contacter</button>
+            </div>
+
+            <div class="member-card">
+                <img src="https://ui-avatars.com/api/?name=Ahmed+M&background=ce1126&color=fff" class="member-img" alt="User">
+                <div class="member-name">Ing. Ahmed M.</div>
+                <div class="member-role">Génie Civil</div>
+                <p class="member-desc">Expert en reconstruction post-conflit. Travaille sur des abris modulaires durables.</p>
+                <button class="connect-btn">Contacter</button>
+            </div>
+
+            <div class="member-card">
+                <img src="https://ui-avatars.com/api/?name=Layla+F&background=009736&color=fff" class="member-img" alt="User">
+                <div class="member-name">Layla F.</div>
+                <div class="member-role">Tech Lead</div>
+                <p class="member-desc">Développeuse Fullstack. Crée des solutions de communication sécurisées pour les ONG.</p>
+                <button class="connect-btn">Contacter</button>
+            </div>
+
+            <div class="member-card">
+                <img src="https://ui-avatars.com/api/?name=Youssef+B&background=FFD700&color=000" class="member-img" alt="User">
+                <div class="member-name">Youssef B.</div>
+                <div class="member-role">Enseignant</div>
+                <p class="member-desc">Professeur de mathématiques organisant des cours virtuels pour les camps de réfugiés.</p>
+                <button class="connect-btn">Contacter</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('user_token');
+        const userInfoRaw = localStorage.getItem('user_info');
+        
+        if (!token || !userInfoRaw) {
+            console.warn("Mode démo : Pas d'utilisateur connecté");
+        }
+        
+        const currentUser = userInfoRaw ? JSON.parse(userInfoRaw) : { nom: 'Invité', metier: 'Médecin' };
+
+        document.getElementById('navName').textContent = currentUser.nom;
+        document.getElementById('navAvatar').textContent = currentUser.nom.charAt(0).toUpperCase();
+
+        document.getElementById('welcomeTitle').innerHTML = `Bienvenue, <span style="color:var(--green)">${currentUser.nom}</span>`;
+        document.getElementById('domainLabel').innerHTML = `<span style="color:var(--gold);">${currentUser.metier}</span>`;
+
+        async function fetchPeers() {
+            const grid = document.getElementById('membersGrid');
+            grid.innerHTML = '<div style="color:#888; grid-column:1/-1; text-align:center;">Recherche de camarades... <i class="fas fa-circle-notch fa-spin"></i></div>';
+
+            try {
+                const res = await fetch(`/api/users/by-profession/${encodeURIComponent(currentUser.metier)}`);
+                const data = await res.json();
+
+                if (data.success && data.users.length > 0) {
+                    grid.innerHTML = ''; 
+                    
+                    const peers = data.users.filter(u => u._id !== currentUser.id);
+
+                    if(peers.length === 0) {
+                        grid.innerHTML = '<div style="color:#aaa; grid-column:1/-1; text-align:center;">Aucun autre membre trouvé dans ce domaine pour l\'instant.</div>';
+                        return;
+                    }
+
+                    peers.forEach(user => {
+                        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nom)}&background=random&color=fff`; 
+                        
+                        const card = `
+                            <div class="member-card">
+                                <img src="${avatarUrl}" class="member-img" alt="${user.nom}">
+                                <div class="member-name">${user.nom}</div>
+                                <div class="member-role">${user.metier}</div>
+                                <p class="member-desc">
+                                    <i class="fas fa-map-marker-alt" style="color:#666;"></i> ${user.localisation || 'Gaza'}<br>
+                                    ${user.experience ? user.experience + ' ans d\'expérience' : 'Nouveau membre'}<br>
+                                    <span style="font-size:0.85rem; color:#888;">"${user.motivation ? user.motivation.substring(0, 50) + '...' : 'Prêt à aider.'}"</span>
+                                </p>
+                                <button class="connect-btn" onclick="alert('Fonctionnalité de chat crypté bientôt disponible.')"><i class="far fa-comment-alt"></i> Contacter</button>
+                            </div>
+                        `;
+                        grid.innerHTML += card;
+                    });
+                } else {
+                    grid.innerHTML = '<div style="color:#aaa; grid-column:1/-1; text-align:center;">Aucun membre trouvé dans ce domaine.</div>';
+                }
+            } catch (err) {
+                console.error("Erreur fetch:", err);
+                grid.innerHTML = '<div style="color:var(--red); grid-column:1/-1; text-align:center;">Erreur de chargement des données.</div>';
+            }
+        }
+
+        fetchPeers();
+
+    </script>
+    <script src="cursor.js"></script>
+</body>
+</html>
